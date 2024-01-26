@@ -20,6 +20,7 @@ Install libraries:
 - openpyxl
 - PyPDF2
 - requests
+
 To install a library, run the command into your windows terminal: `pip install [name of library]`
 
 ## Usage
