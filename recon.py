@@ -5,6 +5,12 @@ import io
 import re
 import openpyxl
 
+
+"""
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////// FUNCTION DEFINITIONS /////////////////////
+////////////////////////////////////////////////////////////////////////////////
+"""
 # This function will return a list of all the id's for the pdfs that we want to search through
 def accessID(startYear, endYear, chamberArray):
     idList = []
@@ -14,6 +20,7 @@ def accessID(startYear, endYear, chamberArray):
             response = json.loads(response.text)
 
         # for each item in the response, get its events, and in the events array, loop through and obtain the id for each event
+        # append chamber to the chamberArray to keep track of the chamber for use later on
         for dateItem in response:
             for eventItems in dateItem['Events']:
                 chamberArray.append(eventItems['Chamber'])
@@ -32,6 +39,8 @@ def getPDF(id):
         print("failure")
 
 # This function will search through the pdf content for a given search term
+#TODO: optimisation to allow for multiple search terms in one search
+# to replace having to do it multiple times, once for each search term
 def search_pdf(pdf_content, search_term):
     pdf_file = io.BytesIO(pdf_content)
     pdf_reader = PyPDF2.PdfReader(pdf_file)
@@ -77,12 +86,16 @@ def add_data_to_excel(file_path, data):
     # Save the changes to the workbook
     workbook.save(file_path)
 
-# ******************* This is the main function *******************************
-# TODO: allow user input for the years and search term. Create default values for these
-
-#Could have an array of chamerID
+"""
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////// MAIN FUNCTION ////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+"""
+input_str = input("Enter the start year and the end year separated by a space: ")
+input_str = input_str.split()
 chambers = []
-pdf_ID = accessID(2022, 2023, chambers)
+pdf_ID = accessID(int(input_str[0]), int(input_str[1]), chambers)
+
 headings = [
     "PDF ID", 
     "Chamber", 
@@ -102,13 +115,14 @@ for PDFid in pdf_ID:
 
     dataToAdd.append(PDFid)
 
-    # need to change this because not all of them are Upper House
     dataToAdd.append(chambers[pdf_ID.index(PDFid)])
 
 
     #  do a loop for the headings
     #TODO: create a system that allows for customised search terms
     searchResults = []
+
+    # probably do not need to search the pdf three separate times
     searchResults.append(search_pdf(response, "Reconciliation Australia"))
     searchResults.append(search_pdf(response, "Reconciliation NSW"))
     searchResults.append(search_pdf(response, "Reconciliation"))
