@@ -15,14 +15,16 @@ reconciliationNSW is a unique Python script that utilises the Hansard API of the
 range of years. The script provides an .xslx spreadsheet that records the existence of key terms, and if so, the number of key terms associated with it.
 
 ## Getting Started
-To get started, download the whole repo (or alternatively just the dist folder) to get started. 
+To get started, download the whole repository (or alternatively just the dist folder) to get started. 
 
 The source code is included for references. 
 
 ## Usage
-In dist, double click on the .exe file. The software would automatically run.
+Navigate to the /dist folder, double click on the .exe file. The software would run. Enter in the range of years, and the program will begin running. 
 
 ## Changelog
+Version 1.2 -- Included custom search years. Optimised searching that reduces search time. 
+
 Version 1.1.1 -- Fixed bug related to incorrect URL update which always resulted in querying the year 2016. Implemented recording of chambers. 
 
 Version 1.1 -- Includes three new search terms, outputted into an Excel file. Bundled into a single .exe file. 
