@@ -41,11 +41,13 @@ def getPDF(id):
 # This function will search through the pdf content for a given search term
 #TODO: optimisation to allow for multiple search terms in one search
 # to replace having to do it multiple times, once for each search term
-def search_pdf(pdf_content, search_term):
+#TODO: use a dictionary to store information easier. One can clearly see
+# that I am trained in C. 
+def search_pdf(pdf_content, search_terms):
     pdf_file = io.BytesIO(pdf_content)
     pdf_reader = PyPDF2.PdfReader(pdf_file)
     
-    total_occurrences = 0
+    total_occurrences = [0 for _ in range (len(search_terms))]
 
     for page_num in range(len(pdf_reader.pages)):
         page = pdf_reader.pages[page_num]
@@ -53,11 +55,14 @@ def search_pdf(pdf_content, search_term):
         
         # Remove line breaks and other whitespace characters
         cleaned_text = re.sub(r'\s+', ' ', text)
-
-        occurrences_on_page = cleaned_text.lower().count(search_term.lower())
-        total_occurrences += occurrences_on_page
         
-    print(f"Total occurrences of '{search_term}': {total_occurrences}")
+        for i, term in enumerate(searchTerms):
+            occurrences_on_page = cleaned_text.lower().count(term.lower())
+            total_occurrences[i] += occurrences_on_page
+        
+    # print(f"Total occurrences of '{search_term}': {total_occurrences}")
+    for i, term in enumerate(searchTerms):
+        print(f"Total occurances of {term}: {total_occurrences[i]}")
     return total_occurrences
 
 # This function will create an excel file with the given headings
@@ -112,20 +117,15 @@ createExcelFile(file_path, headings)
 for PDFid in pdf_ID:
     response = getPDF(PDFid)
     dataToAdd = []
-
     dataToAdd.append(PDFid)
-
     dataToAdd.append(chambers[pdf_ID.index(PDFid)])
 
 
-    #  do a loop for the headings
     #TODO: create a system that allows for customised search terms
-    searchResults = []
+    searchTerms = ["Reconciliation Australia", "Reconciliation NSW", "Reconciliation"]
 
-    # probably do not need to search the pdf three separate times
-    searchResults.append(search_pdf(response, "Reconciliation Australia"))
-    searchResults.append(search_pdf(response, "Reconciliation NSW"))
-    searchResults.append(search_pdf(response, "Reconciliation"))
+    searchResults = []
+    searchResults = search_pdf(response, searchTerms)
 
     for results in searchResults:
         if results > 0:
@@ -135,4 +135,4 @@ for PDFid in pdf_ID:
 
     dataToAdd.extend(searchResults)
     add_data_to_excel(file_path, dataToAdd)
-    print("\n\n")
+    print("\n")
