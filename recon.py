@@ -6,16 +6,17 @@ import re
 import openpyxl
 
 # This function will return a list of all the id's for the pdfs that we want to search through
-def accessID(startYear, endYear):
+def accessID(startYear, endYear, chamberArray):
     idList = []
     for year in range(startYear, endYear + 1):
-        response = requests.get("https://api.parliament.nsw.gov.au/api/hansard/search/year/2016")
+        response = requests.get("https://api.parliament.nsw.gov.au/api/hansard/search/year/" + str(year))
         if response.status_code == 200:
             response = json.loads(response.text)
 
         # for each item in the response, get its events, and in the events array, loop through and obtain the id for each event
         for dateItem in response:
             for eventItems in dateItem['Events']:
+                chamberArray.append(eventItems['Chamber'])
                 idList.append(eventItems['PdfDocId'])
         pass
     return idList
@@ -79,7 +80,9 @@ def add_data_to_excel(file_path, data):
 # ******************* This is the main function *******************************
 # TODO: allow user input for the years and search term. Create default values for these
 
-pdf_ID = accessID(2022, 2023)
+#Could have an array of chamerID
+chambers = []
+pdf_ID = accessID(2022, 2023, chambers)
 headings = [
     "PDF ID", 
     "Chamber", 
@@ -98,7 +101,9 @@ for PDFid in pdf_ID:
     dataToAdd = []
 
     dataToAdd.append(PDFid)
-    dataToAdd.append("Upper House")
+
+    # need to change this because not all of them are Upper House
+    dataToAdd.append(chambers[pdf_ID.index(PDFid)])
 
 
     #  do a loop for the headings
