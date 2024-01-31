@@ -23,7 +23,10 @@ The source code is included for references.
 In dist, double click on the .exe file. The software would automatically run.
 
 ## Changelog
+Version 1.1.1 -- Fixed bug related to incorrect URL update which always resulted in querying the year 2016. Implemented recording of chambers. 
+
 Version 1.1 -- Includes three new search terms, outputted into an Excel file. Bundled into a single .exe file. 
+
 Verion 1.0 -- Includes basic searches within predetermined years to search for key terms associated with reconcilliationNSW.
 ## Acknowledgement
 - Thanks to the Parliament of NSW for providing the public API that provided the open access to the Harsard PDF documents.
