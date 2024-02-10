@@ -37,6 +37,6 @@ Verion 1.0 -- Includes basic searches within predetermined years to search for k
 
 ## Future Updates
 List of future updates to this application:
-- customisable search terms
+- Better error checking
 - narrower time ranges
 - optimised performances
